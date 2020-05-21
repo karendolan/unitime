@@ -15,16 +15,20 @@
  *
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
 */
 
 use mysql;
 
-drop user timetable@localhost;
+drop user IF EXISTS timetable@localhost;
 
 create user timetable@localhost identified by 'unitime';
+/* for Docker */
+create user timetable@'%' identified by 'unitime';
 
 grant all on timetable.* to timetable@localhost;
+/* for Docker */
+grant all on timetable.* to timetable@'%';
 
 flush privileges;
 

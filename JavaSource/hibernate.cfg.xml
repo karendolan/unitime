@@ -3,7 +3,7 @@
     PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
     "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd" >
 
-<!-- 
+<!--
  * Licensed to The Apereo Foundation under one or more contributor license
  * agreements. See the NOTICE file distributed with this work for
  * additional information regarding copyright ownership.
@@ -20,7 +20,7 @@
  *
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  -->
 
 <hibernate-configuration>
@@ -28,7 +28,7 @@
 
 	<!-- MySQL Configuration -->
 	<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-	<property name="connection.url">jdbc:mysql://localhost:3306/timetable</property>
+  <property name="connection.url">jdbc:mysql://database:3306/timetable?allowPublicKeyRetrieval=TRUE</property>
 	<property name="connection.username">timetable</property>
 	<property name="connection.password">unitime</property>
 	<property name="connection.autocommit">true</property>
@@ -36,10 +36,14 @@
 	<property name="tmtbl.uniqueid.generator">org.hibernate.id.TableHiLoGenerator</property>
 	<property name="hibernate.connection.useUnicode">true</property>
 	<property name="hibernate.connection.characterEncoding">utf8</property>
+	<!-- for Java 8-11 TSLv1.2 SSL 3 -->
+	<property name="hibernate.connection.verifyServerCertificate">false</property>
+	<property name="hibernate.connection.requireSSL">false</property>
+	<property name="hibernate.connection.useSSL">false</property>
 	<!-- End of MySQL Configuration -->
-	
+
 	<!-- Oracle Configuration -->
-	<!-- 
+	<!--
 	<property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
 	<property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
 	<property name="connection.username">timetable</property>
@@ -48,7 +52,7 @@
 	<property name="tmtbl.uniqueid.generator">org.hibernate.id.SequenceGenerator</property>
 	-->
 	<!-- End of Oracle Configuration -->
-	
+
 	<!-- Connect database using Apache DBCP -->
 	<property name="hibernate.connection.provider_class">org.unitime.commons.hibernate.connection.LoggingDBCPConnectionProvider</property>
 	<property name="hibernate.dbcp.maxIdle">5</property>
@@ -70,9 +74,9 @@
 	<!-- Generate comments inside the SQL, for easier debugging, defaults -->
 	<property name="hibernate.use_sql_comments">true</property>
 
-	<!-- 
-		Set a maximum "depth" for the outer join fetch tree for single-ended 
-		associations (one-to-one, many-to-one) 
+	<!--
+		Set a maximum "depth" for the outer join fetch tree for single-ended
+		associations (one-to-one, many-to-one)
 	-->
 	<property name="hibernate.max_fetch_depth">2</property>
 
@@ -88,12 +92,12 @@
 
 	<!-- Use Second Level Cache -->
 	<property name="hibernate.cache.use_second_level_cache">true</property>
-	
+
 	<!-- Cache Provider - EhCache -->
 	<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
-	
+
 	<!-- Cache Provider - Infinispan -->
-	<!-- 
+	<!--
 	<property name="hibernate.cache.region.factory_class">org.hibernate.cache.infinispan.InfinispanRegionFactory</property>
 	<property name="hibernate.transaction.factory_class">org.hibernate.engine.transaction.internal.jta.JtaTransactionFactory</property>
 	<property name="hibernate.transaction.jta.platform">org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</property>
@@ -106,9 +110,9 @@
 	<!-- Enable the query cache, individual queries still have to be set cachable -->
 	<property name="hibernate.cache.use_query_cache">true</property>
 
-	<!-- 
-		Force Hibernate to order SQL updates by the primary key value of the items being updates. 
-		This will result in fewer transaction deadlocks in highly concurrent systems.		
+	<!--
+		Force Hibernate to order SQL updates by the primary key value of the items being updates.
+		This will result in fewer transaction deadlocks in highly concurrent systems.
 	-->
 	<property name="hibernate.order_updates">true</property>
 
@@ -119,7 +123,7 @@
 	<!-- property name="hibernate.cglib.use_reflection_optimizer">
 		true
 		</property -->
-		
+
 	<property name="SetBigStringTryClob">true</property>
 
 	<!-- Mapping files -->

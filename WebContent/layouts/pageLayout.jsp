@@ -71,7 +71,7 @@
 </head>
 <body class="unitime-Body" <tiles:getAsString name="onLoadFunction" />>
 	<loc:bundle name="org.unitime.timetable.gwt.resources.GwtMessages" id="GWTMSG">
-	<script language="JavaScript" type="text/javascript">
+	<script type="text/javascript">
 		if (!String.prototype.trim) {
 			String.prototype.trim = function() {
 				return this.replace(/^\s+|\s+$/g,"");
