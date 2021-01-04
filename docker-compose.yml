@@ -1,0 +1,77 @@
+version: "3"
+
+services:
+
+  #################
+  #  The Database #
+  #################
+  database:
+    image: mysql:latest
+    restart: unless-stopped
+
+    # Expose port 3306 to host.
+    ports:
+      - "3306:3306"
+
+    volumes:
+      # If needed, manually add the db schema when the docker node is up:
+      # cat ./Documentation/Database/MySQL/schema.sql | docker exec -i unitime_database_1 /usr/bin/mysql -u root --password=unitimetable
+      # Then, add either the blank data when testing fresh, or woebegon data when testing with stock data
+      # cat ./Documentation/Database/MySQL/blank-data.sql | docker exec -i unitime_database_1 /usr/bin/mysql -u root --password=unitimetable
+      - ./Documentation/Database/MySQL:/docker-entrypoint-initdb.d
+
+    environment:
+      MYSQL_ROOT_PASSWORD: unitimetable
+      MYSQL_DATABASE: timetable
+      MYSQL_USER: timetable
+
+    networks:
+      - unitime-network
+
+  #######################
+  #  The Tomcast Server #
+  #######################
+  webserver:
+    image: tomcat:latest
+    restart: unless-stopped
+    depends_on:
+      - database
+
+    # mount point for application in tomcat
+    volumes:
+      - ./Distributions:/usr/local/tomcat/webapps/
+      - ./Docker/webserver/mysql-connector-java-8.0.19.jar:/usr/local/tomcat/lib/mysql-connector-java-8.0.19.jar
+
+    environment:
+      # jdbc:mysql://localhost:3306/dbname
+      JDBC_URL: "jdbc:mysql://database:3306/timetable"
+      #?connectTimeout=0&amp;socketTimeout=0&amp;autoReconnect=true
+      # JAVA_OPTS: "-Djava.awt.headless=true -Xmx2g -XX:+UseConcMarkSweepGC"
+      JDBC_USER: timetable
+      JDBC_PASS: unitime
+      # debugging variables
+      #JPDA_ADDRESS: "8000"
+      #JPDA_TRANSPORT: "dt_socket"
+
+    # open ports for tomcat
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+
+    networks:
+      - unitime-network
+    command: ["catalina.sh","run"]
+
+#######################
+#  The Tomcast Server #
+#######################
+volumes:
+  unitime-vol:
+
+#######################
+#  The Tomcast Server #
+#######################
+networks:
+  unitime-network:
+    driver: bridge
